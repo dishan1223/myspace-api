@@ -1,6 +1,7 @@
 const db = require('../db/db');
 const bcrypt = require('bcrypt');
 
+// register new users
 const addUser = async (username, password) => {
     const saltRounds = 10;
 
@@ -23,6 +24,7 @@ const addUser = async (username, password) => {
     }
 }
 
+// this function is only for testing
 const getUser = () => {
     return new Promise((resolve, reject)=>{
         db.all('SELECT * FROM users', (err, rows) => {

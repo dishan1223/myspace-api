@@ -8,10 +8,11 @@ const PORT = 3000 || process.env.PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
+// Routes
 app.get('/', (req, res)=>{
     res.send('welcome to MYSPACE');
 })
+// /user route is just for testing
 app.get('/user', async (req, res) => {
     try {
         const allUsers = await auth.getUser();
@@ -21,9 +22,11 @@ app.get('/user', async (req, res) => {
     }
 });
 
+// register a new user
 app.post('/user/new', async (req, res) => { // Changed to POST
     const { username, password } = req.body;
-
+    
+    // input validation
     if (
         !username || 
         !password || 
