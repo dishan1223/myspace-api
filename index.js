@@ -23,6 +23,8 @@ app.get('/user', async (req, res) => {
 });
 
 // register a new user
+// TODO:
+// add a new router name userRouter for these talks
 app.post('/user/new', async (req, res) => { // Changed to POST
     const { username, password } = req.body;
     
