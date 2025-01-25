@@ -1,52 +1,17 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const auth = require('../handler/auth'); // Import auth module
+const auth = require('../handler/auth');
 const authRouter = express.Router();
-
-// JWT secret key
-const JWT_SECRET = process.env.JWT_SECRET;
-
-const authenticateToken = (req, res, next) => {
-    // bearer TOKEN
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if(!token){
-        res.status(401).send('Access Denied');
-    }
-
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            res.status(403).send('Invalid token');
-        } else {
-            req.user = user;
-            next();
-        }
-    });
-}
-
-// Fetch all users (for testing purposes)
-authRouter.get('/user', async (req, res) => {
-    try {
-        const allUsers = await auth.getUser();
-        res.json(allUsers); // Use JSON response for consistency
-    } catch (err) {
-        console.error('Error fetching users:', err); // Log the error for debugging
-        res.status(500).send('Error fetching users');
-    }
-});
 
 // Register a new user
 authRouter.post('/new', async (req, res) => {
     const { username, password } = req.body;
 
-    // Input validation
     if (
-        !username ||
-        !password ||
-        typeof username !== 'string' ||
-        typeof password !== 'string' ||
-        username.includes(' ') ||
+        !username || 
+        !password || 
+        typeof username !== 'string' || 
+        typeof password !== 'string' || 
+        username.includes(' ') || 
         password.includes(' ')
     ) {
         return res.status(400).send('Invalid username or password');
@@ -54,16 +19,46 @@ authRouter.post('/new', async (req, res) => {
 
     try {
         const user = await auth.addUser(username, password);
-        res.status(201).json({
-            message: 'User created successfully',
-            user,
-        });
+        res.status(201).json({ message: 'User created successfully', user });
     } catch (err) {
-        console.error('Error creating user:', err); // Log the error
-        if (err.code === 'SQLITE_CONSTRAINT') {
-            return res.status(409).send('Username already exists');
+        if (err.message.includes('Username already exists')) {
+            res.status(409).send(err.message);
+        } else {
+            res.status(500).send(err.message);
         }
-        res.status(500).send('Error creating user');
+    }
+});
+
+// Login and get JWT token
+authRouter.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).send('Username and password are required');
+    }
+
+    try {
+        const token = await auth.loginUser(username, password);
+        res.status(200).json({ message: 'Login successful', token });
+    } catch (err) {
+        res.status(401).send(err.message);
+    }
+});
+
+// Protected route to verify token
+authRouter.get('/protected', (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).send('Token is required');
+    }
+
+    const token = authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+    try {
+        const user = auth.verifyToken(token);
+        // verifyToken function will throw an error if token is invalid
+        res.status(200).json({ message: 'Token is valid', user });
+    } catch (err) {
+        res.status(401).send(err.message);
     }
 });
 
