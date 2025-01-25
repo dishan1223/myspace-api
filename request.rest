@@ -1,0 +1,13 @@
+POST http://localhost:3000/auth/new
+Content-Type: application/json
+{
+    "username": "testuser",
+    "password": "testpassword"
+}
+####
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+{
+  "username": "testuser",
+  "password": "testpassword"
+}
