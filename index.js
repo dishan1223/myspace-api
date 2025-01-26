@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const authRouter = require('./routes/authRouter'); // Correct path
+const authRouter = require('./routes/authRouter');
+const postRouter = require('./routes/postRouter');
 
 const app = express();
 const PORT = process.env.PORT || 4000; // Fixed PORT declaration
@@ -11,7 +12,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
+// authentication routes
 app.use('/auth', authRouter); // Auth routes
+app.use('/posts', postRouter);
+
+// posts routes
+
+
 app.get('/', (req, res) => {
     res.send('Welcome to MYSPACE');
 });

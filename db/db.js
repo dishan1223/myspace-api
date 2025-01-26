@@ -3,7 +3,7 @@ const db = new sqlite3.Database('database.db',(err)=>{
     if(err){
         console.error(err);        
     } else {
-        console.log('connected to database');
+        console.log('Connected to SQLite database.');
     } 
 });
 
