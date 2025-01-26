@@ -42,6 +42,7 @@ const loginUser = async (req, res) => {
     }
 }
 
+// maybe i need some work in this function
 const testProtectedRoutes = (req, res) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
