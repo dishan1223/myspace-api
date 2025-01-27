@@ -43,7 +43,31 @@ const newPost = (req, res) => {
     });
 };
 
+const deletePost = (req, res) => {
+    console.log('DELETE POST');
+    const { id } = req.body;
+
+    if(!id || typeof id !== 'number') {
+        return res.status(400).json({ error: 'Invalid input: id is required and must be a number.' });
+    }
+
+    const query = 'DELETE FROM posts WHERE id = ?';
+    try {
+        db.run(query, [id], function (err) {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            res.status(200).json({ message: 'Post deleted successfully' });
+        });
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getAllPosts,
     newPost,
+    deletePost
 };
