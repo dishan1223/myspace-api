@@ -2,5 +2,6 @@ node_modules/
 .env
 yarn.lock
 node_modules
+request.rest
 npm-debug.log*
 
