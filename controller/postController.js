@@ -95,7 +95,7 @@ const editPost = (req, res) => {
         }
 
         // WHERE condition
-        const query = `UPDATE posts SET ${update.join(', ')} WHERE id = ?`;
+        const query = `UPDATE posts SET ${update.join(', ')} WHERE id = ? AND username = ?`;
         values.push(postId, username);
 
         db.run(query, values, (err) => {
