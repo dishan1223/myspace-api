@@ -64,6 +64,54 @@ const getPostById = (req, res) => {
     }
 }
 
+const editPost = (req, res) => {
+    const postId = req.params.id;
+    const { username, title, post } = req.body;
+
+    if(!username) {
+        return res.status(400).json({ error: 'Invalid input: username is required.' });
+    }
+
+    try{
+        // keep track of what to update
+        const update = [];
+        const values = [];
+
+        if(title) {
+            update.push('title = ?');
+            values.push(title);
+        }
+
+        if(post) {
+            update.push('post = ?');
+            values.push(post);
+        }
+
+        // if no fields were provided
+        if(update.length === 0){
+            return res.status(400).json({
+                error: "No fields to update. Please provide title or post"
+            })
+        }
+
+        // WHERE condition
+        const query = `UPDATE posts SET ${update.join(', ')} WHERE id = ?`;
+        values.push(postId, username);
+
+        db.run(query, values, (err) => {
+            if(err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                res.status(200).json({ message: 'Post updated successfully' });
+            }
+        })
+
+    } catch (err) {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 const deletePost = (req, res) => {
     console.log('DELETE POST');
     const { id } = req.body;
@@ -91,5 +139,6 @@ module.exports = {
     getAllPosts,
     newPost,
     getPostById,
+    editPost,
     deletePost
 };
