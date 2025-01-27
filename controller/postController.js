@@ -43,6 +43,27 @@ const newPost = (req, res) => {
     });
 };
 
+const getPostById = (req, res) => {
+    id = req.params.id;
+    
+    const query = 'SELECT * FROM posts WHERE id = (?)';
+    try{
+        db.get(query, [id], (err, row) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            if (!row) {
+                return res.status(404).json({ error: 'Post not found' });
+            }
+            res.json(row);
+        });
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 const deletePost = (req, res) => {
     console.log('DELETE POST');
     const { id } = req.body;
@@ -69,5 +90,6 @@ const deletePost = (req, res) => {
 module.exports = {
     getAllPosts,
     newPost,
+    getPostById,
     deletePost
 };

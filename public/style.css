@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+    font-family: sans-serif;
+}
+
+.bg-black{
+    background-color: black;
+}
+
+.w-full{
+    width: 100%;
+}
+.h-full{
+    height: 100dvh;
+}
+.w-80{
+    width: 80%;
+}
+
+.flex{
+    display: flex;
+}
+.flex-col{
+    flex-direction: column;
+}
+.center{
+    justify-content: center;
+    align-items: center;
+}
