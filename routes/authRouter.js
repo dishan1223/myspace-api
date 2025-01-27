@@ -1,5 +1,6 @@
 const express = require('express');
-const { registerNewUser, loginUser, testProtectedRoutes } = require('../controller/authController');
+const { verifyTokenMiddleware } = require('../handler/auth');
+const { registerNewUser, loginUser, deleteAccount } = require('../controller/authController');
 const authRouter = express.Router();
 
 // Routes
@@ -7,8 +8,8 @@ const authRouter = express.Router();
 authRouter.post('/new', registerNewUser);
 // Login and get JWT token
 authRouter.post('/login', loginUser);
-// Protected route to verify token
-authRouter.get('/protected', testProtectedRoutes);
+// Delete account
+authRouter.delete('/delete',verifyTokenMiddleware, deleteAccount);
 
 module.exports = authRouter;
 

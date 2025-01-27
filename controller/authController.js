@@ -1,3 +1,4 @@
+const db = require('../db/db');
 const auth = require('../handler/auth');
 
 // controller to register / add new user
@@ -35,32 +36,76 @@ const loginUser = async (req, res) => {
     }
 
     try {
-        const token = await auth.loginUser(username, password);
-        res.status(200).json({ message: 'Login successful', token });
+        const { token, userId } = await auth.loginUser(username, password);
+        
+        res.status(200).json({ message: 'Login successful', token ,userId });
     } catch (err) {
-        res.status(401).send(err.message);
+        res.status(401).json({ message: 'Invalid username or password' });
     }
 }
 
-// maybe i need some work in this function
-const testProtectedRoutes = (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).send('Token is required');
+// if someone wants to delete his account
+const deleteAccount = (req, res) => {
+    // Assuming you're passing userId through JWT or as a URL param
+    const userId = req.body.id; // Or req.params.userId if it's in the URL
+
+    if (!userId) {
+        return res.status(400).json({ error: true, message: 'User ID is required' });
     }
 
-    const token = authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
-    try {
-        const user = auth.verifyToken(token);
-        // verifyToken function will throw an error if token is invalid
-        res.status(200).json({ message: 'Token is valid', user });
-    } catch (err) {
-        res.status(401).send(err.message);
-    }
-}
+    const deletePostsQuery = 'DELETE FROM posts WHERE username = (SELECT username FROM users WHERE id = ?)';
+    const deleteUserQuery = 'DELETE FROM users WHERE id = ?';
+
+    // Start the transaction
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION', function (err) {
+            if (err) {
+                console.error('Error starting transaction:', err.message);
+                return res.status(500).json({ error: true, message: 'Internal Server Error' });
+            }
+
+            // Delete posts first
+            db.run(deletePostsQuery, [userId], function (err) {
+                if (err) {
+                    console.error('Error deleting posts:', err.message);
+                    db.run('ROLLBACK', () => {
+                        res.status(500).json({ error: true, message: 'Failed to delete posts' });
+                    });
+                    return;
+                }
+
+                // Then delete the user
+                db.run(deleteUserQuery, [userId], function (err) {
+                    if (err) {
+                        console.error('Error deleting user:', err.message);
+                        db.run('ROLLBACK', () => {
+                            res.status(500).json({ error: true, message: 'Failed to delete user' });
+                        });
+                        return;
+                    }
+
+                    if (this.changes === 0) {
+                        db.run('ROLLBACK', () => {
+                            return res.status(404).json({ error: true, message: 'User not found' });
+                        });
+                    } else {
+                        db.run('COMMIT', (err) => {
+                            if (err) {
+                                console.error('Error committing transaction:', err.message);
+                                return res.status(500).json({ error: true, message: 'Internal Server Error' });
+                            }
+                            res.status(200).json({ success: true, message: 'Account and all associated posts deleted successfully' });
+                        });
+                    }
+                });
+            });
+        });
+    });
+};
+
 
 module.exports = {
     registerNewUser,
     loginUser,
-    testProtectedRoutes
+    deleteAccount
 };
