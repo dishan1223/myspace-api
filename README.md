@@ -26,8 +26,6 @@ Myspace API is the powerhouse backend for a vibrant blogging platform, where use
 
 ---
 
-These badges highlight key aspects of the **Myspace API** project such as the technologies used, the open-source license, and the current versions.
-
 
 ## 🛠️ Tech Stack
 
