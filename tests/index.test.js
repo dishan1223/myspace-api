@@ -5,6 +5,7 @@ const app = require('../index');
 // while writing tests make sure to,
 // use async/await when calling API
 // user semicolons
+// use .set to set headers
 
 describe('API', () => {
     // Tokens and user ID for testing
@@ -67,6 +68,23 @@ describe('API', () => {
             if(getPostResponse.status === 200){
                 expect(getPostResponse.type).toBe('application/json');
             }
+        });
+        it("should response with 201(created) when user hits posts/new", async ()=>{
+            // to create a new post I need to send username, title, post, and token
+            // token must be send as a header (authorization: Bearer <token>)
+            
+            const newPostResponse = await supertest(app)
+                .post('/posts/new')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    username: testUser.username,
+                    title: 'Test Post',
+                    post: 'This is a test post'
+                });
+            
+            // status should be 201(created)
+            expect(newPostResponse.status).toBe(201);
+            expect(newPostResponse.type).toBe('application/json');
         });
     })
 });
