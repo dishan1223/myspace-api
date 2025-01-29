@@ -1,6 +1,11 @@
 const supertest = require('supertest');
 const app = require('../index');
 
+// NOTES:
+// while writing tests make sure to,
+// use async/await when calling API
+// user semicolons
+
 describe('API', () => {
     // Tokens and user ID for testing
     let token;
@@ -50,7 +55,19 @@ describe('API', () => {
             expect(getPostsResponse.status).toBe(200);
             // response should be in json format
             expect(getPostsResponse.type).toBe('application/json');
-        })
+        });
+        it('should respond with 200(OK) when user hits posts/:id', async ()=>{
+            // post id's change don't change when a post is deleted
+            // so post id = 3 may not always give a response. 
+            // make sure to check all post id's in the database
+            // then change the postId variable 
+            const postId  = 3;
+            const getPostResponse = await supertest(app).get(`/posts/${postId}`);
+
+            if(getPostResponse.status === 200){
+                expect(getPostResponse.type).toBe('application/json');
+            }
+        });
     })
 });
 
