@@ -44,5 +44,13 @@ describe('API', () => {
             expect(response.status).toBe(200);
         });
     })
+    describe('GET posts/', ()=>{
+        it('should respond with 200(OK)', async ()=>{
+            const getPostsResponse = await supertest(app).get('/posts/');
+            expect(getPostsResponse.status).toBe(200);
+            // response should be in json format
+            expect(getPostsResponse.type).toBe('application/json');
+        })
+    })
 });
 
