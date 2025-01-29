@@ -10,7 +10,8 @@ describe('GET /', () => {
         username: 'test',
         password: 'test'
     };
-
+    
+    // register and log in before testing anything
     beforeAll(async () => {
         //  Register a user (Handle existing user case)
         const registerResponse = await supertest(app)
