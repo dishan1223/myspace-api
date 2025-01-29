@@ -1,7 +1,7 @@
 const supertest = require('supertest');
 const app = require('../index');
 
-describe('GET /', () => {
+describe('API', () => {
     // Tokens and user ID for testing
     let token;
     let userId;
@@ -38,10 +38,11 @@ describe('GET /', () => {
         expect(token).toBeDefined();
         expect(userId).toBeDefined();
     });
-
-    it('should respond with 200(OK)', async () => {
-        const response = await supertest(app).get('/');
-        expect(response.status).toBe(200);
-    });
+    describe('GET /', () => {
+        it('should respond with 200(OK)', async () => {
+            const response = await supertest(app).get('/');
+            expect(response.status).toBe(200);
+        });
+    })
 });
 
