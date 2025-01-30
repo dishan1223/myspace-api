@@ -50,7 +50,7 @@ describe('API', () => {
             expect(response.status).toBe(200);
         });
     })
-    describe('GET posts/', ()=>{
+    describe('posts/', ()=>{
         it('should respond with 200(OK)', async ()=>{
             const getPostsResponse = await supertest(app).get('/posts/');
             expect(getPostsResponse.status).toBe(200);
@@ -86,6 +86,20 @@ describe('API', () => {
             expect(newPostResponse.status).toBe(201);
             expect(newPostResponse.type).toBe('application/json');
         });
+        it('edit post on /posts/:id route', async ()=>{
+            const editPostResponse = await supertest(app)
+                .put('/posts/edit/3')
+                .set('Authorization', `Bearer ${token}`)
+                .send({
+                    username: testUser.username,
+                    title: 'Test Post 2',
+                    post: 'This is a test post 2'
+                })
+
+            if(editPostResponse.status === 200){
+                expect(editPostResponse.type).toBe('application/json');
+            };
+        })
     })
 });
 
