@@ -87,8 +87,10 @@ describe('API', () => {
             expect(newPostResponse.type).toBe('application/json');
         });
         it('edit post on /posts/:id route', async ()=>{
+            const postId = 13; // this id is not fixed. 
+            // we have unique id's for each posts
             const editPostResponse = await supertest(app)
-                .put('/posts/edit/3')
+                .put(`/posts/edit/${postId}`)
                 .set('Authorization', `Bearer ${token}`)
                 .send({
                     username: testUser.username,
