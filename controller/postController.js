@@ -1,7 +1,7 @@
 const db = require('../db/db');
 
 const getAllPosts = (req, res) => {
-    console.log(`${req.method} - ${req.url} - ${req.ip} - ${new Date()}`);
+    console.log(`${req.method} - ${req.url} - ${req.ip} - ${new Date()} - /posts`);
 
     const query = 'SELECT * FROM posts';
     db.all(query, (err, rows) => {

@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const authRouter = require('./routes/authRouter');
 const postRouter = require('./routes/postRouter');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 4000;
 app.locals.title = "Myspace";
 
 // Middleware
+app.use(cors());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
