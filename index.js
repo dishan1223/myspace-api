@@ -24,8 +24,8 @@ app.get('/', (req, res) => {
 });
 
 // authentication routes
-app.use('/auth', authRouter);
-app.use('/posts', postRouter);
+app.use('api/auth', authRouter);
+app.use('api/posts', postRouter);
 
 // Start server only if this file is run directly
 if (require.main === module) {

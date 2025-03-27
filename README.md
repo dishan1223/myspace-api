@@ -66,7 +66,7 @@ JWT_SECRET=your_secret_key
 ---
 
 ### Register a new user
-`POST /auth/new`
+`POST api/auth/new`
 
 | Parameter | Type   | Description                     |
 |-----------|--------|---------------------------------|
@@ -76,7 +76,7 @@ JWT_SECRET=your_secret_key
 ---
 
 ### Log in a user
-`POST /auth/login`
+`POST api/auth/login`
 
 | Parameter | Type   | Description                     |
 |-----------|--------|---------------------------------|
@@ -86,7 +86,7 @@ JWT_SECRET=your_secret_key
 ---
 
 ### Delete a user account
-`DELETE /auth/delete`
+`DELETE api/auth/delete`
 
 | Parameter | Type   | Description                      |
 |-----------|--------|----------------------------------|
@@ -95,13 +95,13 @@ JWT_SECRET=your_secret_key
 ---
 
 ### Get all posts
-`GET /posts/`
+`GET api/posts/`
 *No parameters required*
 
 ---
 
 ### Create a new post
-`POST /posts/new`
+`POST api/posts/new`
 
 | Parameter | Type   | Description                     |
 |-----------|--------|---------------------------------|
@@ -112,7 +112,7 @@ JWT_SECRET=your_secret_key
 ---
 
 ### Edit an existing post
-`PUT /posts/edit`
+`PUT api/posts/edit`
 
 | Parameter | Type   | Description                              |
 |-----------|--------|------------------------------------------|
@@ -123,7 +123,7 @@ JWT_SECRET=your_secret_key
 ---
 
 ### Delete a post
-`DELETE /posts/delete`
+`DELETE api/posts/delete`
 
 | Parameter | Type   | Description                      |
 |-----------|--------|----------------------------------|
